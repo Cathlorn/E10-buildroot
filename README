@@ -1,0 +1,18 @@
+This is a set of directories all focusing on building a kernel and filesystem 
+for the Synapse Wireless E10 using buildroot. 
+
+Information about the E10:
+http://www.synapse-wireless.com/index.php?mainID=3&subID=3&type=product&prodID=10
+
+Information about buildroot:
+http://buildroot.uclibc.org/
+
+Directories:
+buildroot-2011.05	unmodified buildroot
+br1105-main		modified buildroot for the E10
+br-upgrade		modified buildroot for E10 to build upgrade images
+package-build		Set of script to package up the builds into a zip
+			file used to upgrade the E10.
+documentation		Documentaion about upgrading the E10 and customizations
+			to the buildroot environment.
+
