@@ -1,0 +1,40 @@
+# ATTENTION! This does not handle 'depends', just 'select'! 
+# See package/config/util.c write_make_deps()
+#
+toolchain_buildroot_largefile: $(BASE_TARGETS) largefile
+toolchain_buildroot_inet_ipv6: $(BASE_TARGETS) inet_ipv6
+toolchain_buildroot_inet_rpc: $(BASE_TARGETS) inet_rpc
+toolchain_buildroot_wchar: $(BASE_TARGETS) use_wchar
+toolchain_buildroot_locale: $(BASE_TARGETS) toolchain_buildroot_wchar enable_locale
+toolchain_buildroot_program_invocation: $(BASE_TARGETS) program_invocation
+toolchain_buildroot_cxx: $(BASE_TARGETS) install_libstdcpp
+pthreads_old: $(BASE_TARGETS) toolchain_has_threads
+rootfs_device_creation_dynamic_udev: $(BASE_TARGETS) udev
+lzop: $(BASE_TARGETS) lzo
+rrdtool: $(BASE_TARGETS) freetype libart libpng zlib
+sshfs: $(BASE_TARGETS) libfuse libglib2 gettext libintl libiconv openssh
+usb_modeswitch: $(BASE_TARGETS) libusb libusb_compat
+usbmount: $(BASE_TARGETS) udev udev_volume_id lockfile_progs
+usbutils: $(BASE_TARGETS) libusb
+usbutils_zlib: $(BASE_TARGETS) zlib
+openssl: $(BASE_TARGETS) zlib
+sqlite_readline: $(BASE_TARGETS) ncurses readline
+libpng: $(BASE_TARGETS) zlib
+libpcap: $(BASE_TARGETS) zlib
+libglib2: $(BASE_TARGETS) gettext libintl libiconv zlib
+newt: $(BASE_TARGETS) slang
+readline: $(BASE_TARGETS) ncurses
+ifplugd: $(BASE_TARGETS) libdaemon
+iw: $(BASE_TARGETS) libnl
+openssh: $(BASE_TARGETS) openssl zlib
+openvpn_lzo: $(BASE_TARGETS) lzo
+openvpn_openssl: $(BASE_TARGETS) openssl
+pppd_filter: $(BASE_TARGETS) libpcap
+webif: $(BASE_TARGETS) haserl
+dialog: $(BASE_TARGETS) ncurses libiconv
+lockfile_progs: $(BASE_TARGETS) liblockfile
+screen: $(BASE_TARGETS) ncurses
+htop: $(BASE_TARGETS) ncurses
+nano: $(BASE_TARGETS) ncurses
+e10_python: $(BASE_TARGETS) ncurses berkeleydb expat readline openssl sqlite gzip bzip2
+rootfs_jffs2_nandflash_2k_128k: $(BASE_TARGETS) rootfs_jffs2_nocleanmarker

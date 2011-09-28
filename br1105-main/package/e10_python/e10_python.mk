@@ -1,0 +1,107 @@
+#############################################################
+#
+# python
+#
+#############################################################
+E10_PYTHON_VERSION=2.6.6
+E10_PYTHON_VERSION_MAJOR=2.6
+E10_PYTHON_SOURCE:=Python-$(E10_PYTHON_VERSION).tar.bz2
+E10_PYTHON_SITE:=http://python.org/ftp/python/$(E10_PYTHON_VERSION)
+E10_PYTHON_DIR:=$(BUILD_DIR)/Python-$(E10_PYTHON_VERSION)
+E10_PYTHON_CAT:=$(BZCAT)
+E10_PYTHON_BINARY:=python
+E10_PYTHON_TARGET_BINARY:=usr/bin/python$(E10_PYTHON_VERSION_MAJOR)
+E10_PYTHON_DEPS:=readline ncurses expat openssl bzip2
+E10_PYTHON_SITE_PACKAGE_DIR=$(TARGET_DIR)/usr/lib/python$(E10_PYTHON_VERSION_MAJOR)/site-packages
+
+
+$(DL_DIR)/$(E10_PYTHON_SOURCE):
+	 $(call DOWNLOAD,$(E10_PYTHON_SITE),$(E10_PYTHON_SOURCE))
+
+python-source: $(DL_DIR)/$(E10_PYTHON_SOURCE)
+
+$(E10_PYTHON_DIR)/.unpacked: $(DL_DIR)/$(E10_PYTHON_SOURCE)
+	$(E10_PYTHON_CAT) $(DL_DIR)/$(E10_PYTHON_SOURCE) | tar -C $(BUILD_DIR) $(TAR_OPTIONS) -
+	touch $@
+
+$(E10_PYTHON_DIR)/.hostpython: $(E10_PYTHON_DIR)/.unpacked
+	(cd $(E10_PYTHON_DIR); rm -rf config.cache; \
+		CC="$(HOSTCC)" \
+		./configure $(QUIET) && \
+		make python Parser/pgen && \
+		mv python hostpython && \
+		mv Parser/pgen Parser/hostpgen && \
+		make distclean \
+	) && \
+	touch $@
+
+$(E10_PYTHON_DIR)/.patched: $(E10_PYTHON_DIR)/.hostpython
+	toolchain/patch-kernel.sh $(E10_PYTHON_DIR) package/e10_python/ Python-2.6.6-xcompile.patch
+	touch $@
+
+
+$(E10_PYTHON_DIR)/.configured: $(E10_PYTHON_DIR)/.patched
+	(cd $(E10_PYTHON_DIR); rm -rf config.cache; \
+		CC=$(TARGET_CC) \
+		CXX=$(TARGET_CXX) \
+		AR=$(TARGET_AR) \
+		RANLIB=$(TARGET_RANLIB) \
+		./configure \
+		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_HOST_NAME) \
+		--prefix=/python \
+		CPPFLAGS="-I$(STAGING_DIR)/usr/include" \
+		CFLAGS="-fPIC" \
+		LDFLAGS="-L$(STAGING_DIR)/usr/lib" \
+	)
+	touch $@
+
+$(E10_PYTHON_DIR)/$(E10_PYTHON_BINARY): $(E10_PYTHON_DIR)/.configured
+	(cd $(E10_PYTHON_DIR); \
+		make HOSTPYTHON=$(E10_PYTHON_DIR)/hostpython HOSTPGEN=$(E10_PYTHON_DIR)/Parser/hostpgen \
+			BLDSHARED="$(TARGET_CC) -shared" CROSS_COMPILE=arm-linux- CROSS_COMPILE_TARGET=yes \
+			DESTDIR=$(TARGET_DIR) \
+	)
+		
+
+
+$(TARGET_DIR)/$(E10_PYTHON_TARGET_BINARY): $(E10_PYTHON_DIR)/$(E10_PYTHON_BINARY)
+	rm -rf $(E10_PYTHON_DIR)/Lib/test
+	LD_LIBRARY_PATH=$(STAGING_DIR)/lib
+	$(MAKE) CC=$(TARGET_CC) -C $(E10_PYTHON_DIR) install \
+		BLDSHARED="$(TARGET_CC) -shared" CROSS_COMPILE=arm-linux- CROSS_COMPILE_TARGET=yes \
+		prefix=$(TARGET_DIR)/usr \
+		PYTHON_MODULES_INCLUDE=$(STAGING_DIR)/usr/include \
+		PYTHON_MODULES_LIB="$(STAGING_DIR)/lib $(STAGING_DIR)/usr/lib" \
+		HOSTPYTHON=./hostpython HOSTPGEN=./Parser/hostpgen && \
+	rm $(TARGET_DIR)/usr/bin/python && \
+	ln -s python$(E10_PYTHON_VERSION_MAJOR) $(TARGET_DIR)/usr/bin/python && \
+	rm $(TARGET_DIR)/usr/bin/idle && \
+	rm $(TARGET_DIR)/usr/bin/pydoc && \
+	cp -dpr $(TARGET_DIR)/usr/include/python$(E10_PYTHON_VERSION_MAJOR) $(STAGING_DIR)/usr/include/
+	mkdir -p $(STAGING_DIR)/usr/lib/python$(E10_PYTHON_VERSION_MAJOR)
+	cp -dpr $(TARGET_DIR)/usr/lib/python$(E10_PYTHON_VERSION_MAJOR)/config $(STAGING_DIR)/usr/lib/python$(E10_PYTHON_VERSION_MAJOR)/
+
+	touch -c $@
+
+e10_python: $(E10_PYTHON_DEPS) $(TARGET_DIR)/$(E10_PYTHON_TARGET_BINARY)
+
+e10_python-clean:
+	-$(MAKE) -C $(E10_PYTHON_DIR) distclean
+	rm -f $(E10_PYTHON_DIR)/.configured $(TARGET_DIR)/$(E10_PYTHON_TARGET_BINARY)
+	-rm -rf $(TARGET_DIR)/usr/lib/python* $(TARGET_DIR)/usr/include/python*
+	-rm -f $(STAGING_DIR)/usr/lib/libpython$(E10_PYTHON_VERSION_MAJOR).so
+
+e10_python-dirclean:
+	rm -rf $(E10_PYTHON_DIR)
+
+
+#############################################################
+#
+# Toplevel Makefile options
+#
+#############################################################
+ifeq ($(BR2_PACKAGE_E10_PYTHON),y)
+TARGETS+=e10_python
+endif
+

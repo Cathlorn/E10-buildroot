@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# Start the network....
+#
+
+case "$1" in
+  start3)
+	/sbin/ifup lo
+	/sbin/ifconfig wlan0 | /bin/grep wlan0
+	if [ $? -eq 0 ]
+	then
+	  /sbin/ifup wlan0
+	else
+	  echo "S40network doing nothing..."
+	fi
+	;;
+  start)
+ 	echo "Starting network..."
+	/sbin/ifup -a
+	;;
+  stop)
+	echo -n "Stopping network..."
+	/sbin/ifdown -a
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
+

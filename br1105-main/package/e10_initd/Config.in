@@ -1,0 +1,5 @@
+config BR2_PACKAGE_E10_INITD
+	bool "e10_initd"
+	help
+	  Synapse Wireless Inc. E10 specific /etc/init.d scripts
+

@@ -1,0 +1,15 @@
+config BR2_PACKAGE_E10_PYTHON
+	bool "e10_python"
+	select BR2_PACKAGE_NCURSES
+	select BR2_PACKAGE_BERKELEYDB
+	select BR2_PACKAGE_EXPAT
+	select BR2_PACKAGE_READLINE
+	select BR2_PACKAGE_OPENSSL
+	select BR2_PACKAGE_SQLITE
+	select BR2_PACKAGE_GZIP
+	select BR2_PACKAGE_BZIP2
+	help
+	  Python for the E10
+
+	  http://www.python.org/
+

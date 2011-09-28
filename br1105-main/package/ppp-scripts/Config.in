@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PPP_SCRIPTS
+	bool "ppp-scripts"
+	help
+	  PPP chat scripts to aid in connecting to a cellular data network
+
