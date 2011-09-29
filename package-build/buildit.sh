@@ -1,11 +1,12 @@
 #!/bin/bash
 
-uinitk="../br-e10-recv/output/images/uImage"
-ukernel="../br1105-main/output/images/uImage"
-urootfs="../br1105-main/output/images/rootfs.jffs2"
-uscript="../br-e10-recv/jcmod/root/upgrade.sh"
-ufilesd="./files"
-uarchived="./archive"
+tld="/usr/local/src/git/E10-buildroot"
+uinitk="$tld/br-e10-recv/output/images/uImage"
+ukernel="$tld/br1105-main/output/images/uImage"
+urootfs="$tld/br1105-main/output/images/rootfs.jffs2"
+uscript="$tld/br-e10-recv/jcmod/root/upgrade.sh"
+ufilesd="$tld/package-build/files"
+uarchived="$tld/package-build/archive"
 
 echo "Copying files..."
 cp $uinitk $ufilesd/uImage-e10i
