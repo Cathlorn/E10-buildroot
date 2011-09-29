@@ -10,9 +10,10 @@ http://buildroot.uclibc.org/
 Directories:
 buildroot-2011.05	unmodified buildroot
 br1105-main		modified buildroot for the E10
-br-upgrade		modified buildroot for E10 to build upgrade images
+br-e10-recv		modified buildroot for E10 to build upgrade images
 package-build		Set of script to package up the builds into a zip
 			file used to upgrade the E10.
 documentation		Documentaion about upgrading the E10 and customizations
 			to the buildroot environment.
+patches			Various patches used by buildroot for different components
 
