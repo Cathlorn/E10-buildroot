@@ -1,15 +1,19 @@
 #!/bin/sh
 
-ukernel="uImage"
-urootfs="rootfs.jffs2"
-uuboot="u-boot-e10.bin"
-urkernel="uImage-e10i"
-umpath="/mnt"
-uvpath="/mntv"
+uversion="2011-10-03 13:23:57"
+ukernel="uImage"	#Main Kernel
+urootfs="rootfs.jffs2"	#New jffs2 Root Filesystem
+uuboot="u-boot-e10.bin"	#New U-boot binary
+urkernel="uImage-e10i"	#Recovery/Upgrade/Install kernel
+umpath="/mnt"		#Path to mount upgrade files
+uvpath="/mntv"		#Path to mount var/log for temporary storage
+			#during upgrade and /var/log during runtime
 
 sanity_checks () {
-[ -b /dev/sda1] || echo "Missing sda1" && exit
-[ -f "$umpath/$ukernel" ] || echo "Missing upgrade kernel" && exit
+[ -b /dev/sda1] || echo "Missing sda1" && exit 1
+[ -f "$umpath/$ukernel" ] || echo "Missing upgrade kernel" && exit 2
+[ -f "$umpath/$urootfs" ] || echo "Missing upgrade rootfs" && exit 3
+[ -f "$umpath/$urkernel" ] || echo "Missing Recovery Kernel" && exit 4
 }
 
 upgrade_uboot () {
@@ -27,16 +31,16 @@ else
 fi
 }
 
-create_varlog () {
-mkdir $uvpath
+create_varlog_backup () {
+mkdir -p $uvpath
 mkdir /oldroot
-mount -t jffs2 /dev/mtdblock1 /oldroot
 
 cat /proc/mtd | grep mtd4
 if [ $? -eq 1]
 then
   echo "MTD4 does not exist"
 else
+  mount -t jffs2 /dev/mtdblock1 /oldroot
   mount -t jffs2 /dev/mtdblock4 $uvpath
   if [ $? -eq 0 ]
   then
@@ -47,12 +51,14 @@ else
     mount -t jffs2 /dev/mtdblock4 $uvpath
     tar -cvf $uvpath/rootbkup.tar /oldroot/root/*
   fi
+  umount /oldroot
+  umount $uvpath
 fi
 }
 
 
 echo
-echo "E10 Image upgrader 201109231209"
+echo "E10 Image upgrader $uversion"
 echo
 echo 0 > /sys/class/leds/greenled/brightness
 echo 0 > /sys/class/leds/redled/brightness
@@ -68,6 +74,7 @@ then
     mount /dev/sda1 $umpath
     if [ -f "$umpath/$ukernel" ]
     then
+      create_varlog_backup
       #/usr/sbin/flash_erase
       #Erase Flash for Kernel upgrade
       echo "About to erase Flash for kernel Storage"
@@ -90,8 +97,8 @@ then
       /usr/sbin/nandwrite -p -s 0x400000 /dev/mtd0 /mnt/uImage-e10i
       echo "Formatting /dev/mtd1 for rootfs"
       /usr/sbin/flash_eraseall -q -j /dev/mtd1
-      echo "Formatting /dev/mtd4 for logfs"
-      /usr/sbin/flash_eraseall -q -j /dev/mtd4
+      #echo "Formatting /dev/mtd4 for logfs"
+      #/usr/sbin/flash_eraseall -q -j /dev/mtd4
       echo "About to write $umpath/$urootfs to mtd1"
       sleep 2
       /usr/sbin/nandwrite -a /dev/mtd1 /mnt/rootfs.jffs2
