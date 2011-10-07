@@ -1,7 +1,9 @@
 #! /bin/sh
 #
 # System-V init script for the openntp daemon
-#
+# Modified by J.C. Woltz <jwoltz@gmail.com>
+# 20111007094213 set the hwclock if ntpdate successful
+# 
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DESC="network time protocol daemon"
@@ -23,7 +25,15 @@ case "$1" in
 	if [ -x $NTPDATE_BIN ] ; then
 		echo -n "Getting initial time via ntp"
 		$NTPDATE_BIN $NTPDATE_OPTS $NTPSERVERS > /dev/null 2>&1
-		echo "."
+		if [ $? -eq 0 ]
+		then
+		  echo "..."
+		  echo -n "Setting hwclock from system time"
+		  /bin/busybox hwclock -w -u
+		  echo "."
+		else
+		  echo ".!!"
+		fi
 	fi
 
 	echo -n "Starting $DESC: $NAME"
