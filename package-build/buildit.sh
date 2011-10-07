@@ -1,6 +1,7 @@
 #!/bin/bash
 
-tld="/usr/local/src/git/E10-buildroot"
+#tld="/usr/local/src/git/E10-buildroot"
+tld="$( cd "$( dirname "$0" )"/.. && pwd )"
 ukernel="$tld/br1105-main/output/images/uImage"
 urootfs="$tld/br1105-main/output/images/rootfs.jffs2"
 nkernel="$tld/br-e10-next/output/images/uImage"
@@ -9,6 +10,9 @@ uinitk="$tld/br-e10-recv/output/images/uImage"
 uscript="$tld/br-e10-recv/jcmod/root/upgrade.sh"
 ufilesd="$tld/package-build/files"
 uarchived="$tld/package-build/archive"
+
+mkdir -p $ufilesd
+mkdir -p $uarchived
 
 echo "Cleaning old files..."
 rm $ufilesd/*
@@ -20,7 +24,7 @@ cp $urootfs $ufilesd/
 cp $uscript $ufilesd/
 
 echo "Compiling u-boot environment script"
-mkimage -T script -C none -n 'E10 environment update' -A arm -d set-uboot-env files/setenv.img
+mkimage -T script -C none -n 'E10 environment update' -A arm -d set-uboot-env $ufilesd/setenv.img
 
 FILENAMES=e10-1105-`date +%Y%m%d%H%M%S`
 FILENAMEN=e10-next-`date +%Y%m%d%H%M%S`
