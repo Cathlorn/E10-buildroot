@@ -1,6 +1,6 @@
 #!/bin/sh
 
-uversion="2011-10-03 13:23:57"
+uversion="2011-10-16 14:52:57"
 ukernel="uImage"	#Main Kernel
 urootfs="rootfs.jffs2"	#New jffs2 Root Filesystem
 uuboot="u-boot-e10.bin"	#New U-boot binary
