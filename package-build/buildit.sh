@@ -26,8 +26,9 @@ cp $uscript $ufilesd/
 echo "Compiling u-boot environment script"
 mkimage -T script -C none -n 'E10 environment update' -A arm -d set-uboot-env $ufilesd/setenv.img
 
-FILENAMES=e10-1105-`date +%Y%m%d%H%M%S`
-FILENAMEN=e10-next-`date +%Y%m%d%H%M%S`
+DT=`date -u +%Y%m%d%H%M%S`
+FILENAMES=e10-1105-$DT
+FILENAMEN=e10-next-$DT
 echo "Creating $FILENAMES.zip ..."
 cd $ufilesd
 zip -rD $uarchived/$FILENAMES ./*
@@ -43,7 +44,7 @@ zip -rD $uarchived/$FILENAMEN ./*
 echo "======================================================================"
 echo "======================================================================"
 
-#echo sending file to bluehost
-#scp $uarchived/$FILENAME.zip iworryfo@jcwoltz.com:public_html/e10/
+echo sending $FILENAMEN to hosting provider
+scp $uarchived/$FILENAMEN.zip iworryfo@jcwoltz.com:public_html/e10/
 echo "Done!"
 
