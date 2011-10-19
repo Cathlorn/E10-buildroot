@@ -7,6 +7,7 @@ setenv bootswrecovery 'nboot 0x21000000 0 400000'
 echo ====== Upgrade Boot Argument Settings ======
 setenv ubootargs 'setenv bootargs console=ttyS0,115200 root=/dev/mtdblock1 mtdparts=atmel_nand:16M(kernel),120M(rootfs),4M(kernel2),16M(recovery),-(logs) rw rootfstype=jffs2'
 setenv upgrade 'run ubootargs;usb start;fatload usb 0 0x21000000 uImage-e10i;bootm 0x21000000'
+setenv ubenv 'usb start;fatload usb 0 0x21000000 setenv.img;source 0x21000000'
 echo =========== Save new definitions ===========
 saveenv
 echo =========== Starting upgrade env ===========
