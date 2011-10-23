@@ -1,1 +1,92 @@
-placeholder
+Section 1. Intro
+=====================================================================
+This is an attempt to publicly and non-offically update the core
+OS (linux) for the Syanspe Wireless E10. 
+
+Synapse Wireless's E10 page:
+http://www.synapse-wireless.com/index.php?mainID=3&subID=3&type=product&prodID=10
+
+Synapse Wireless's E10 product brief:
+http://www.synapse-wireless.com/documents/products/SYNAPSE_SNAP_Connect_E10.pdf
+
+The E10 comes in a few varieties, but they all essentially have the same basic
+hardware. An Atmel AT91SAM9G20 processor, 64 MB Ram, 256 MB Nand Flash, and a
+RF Engine of some kind. (RF100/RF200/RF300)
+
+Synapse Wireless's RF Engine overview:
+http://www.synapse-wireless.com/index.php?mainID=3&subID=3&type=product&prodID=3
+
+The main purpose of the E10 is to run software called Snap Connect. Snap 
+Connect is python code to interface between the RF Engine and some other
+system. The "some other system" is your system of choice. Some people have
+the E10 collect data from the RF Engines, then upload the data with HTTP 
+calls. There are other ways, but this is about upgrading the core OS of
+the E10. 
+
+Section 1.A Why upgrade the E10 OS?
+=====================================================================
+The stock E10 OS/applications run fine. (Linux 2.6.33, python 2.6.6, 
+buildroot 2010.02, busybox 1.13.x)
+Do you need more USB Wifi (802.11 b/g/n) cards supported? 
+Do you need more USB Cellular Data Modems supported?
+
+Those were my primary reasons for updating. I hear python 2.7 adds 
+some nice features and libraries. Since Snap Connect is python 
+based, and your main application on the E10 is in python, this will
+help with some issues. 
+
+This build is based on Linux 3.0.4, buildroot 2011.11-git, python 
+2.7.2, busybox 1.19.2. 
+
+The updated linux kernel add support for many newer USB Cell/Wifi
+devices. The updated buildroot updates many packages, including
+python, busybox, (adds udev), the gcc compiler, and many other
+packages used. 
+
+Section 2. How to upgrade the E10?
+=====================================================================
+I have spent a considerable ammount of time to ease the upgrade 
+process. The output of this set of directories and scripts is a zip
+file. 
+
+*BACKUP YOUR IMPORTANT FILES!* *BACKUP YOUR IMPORTANT FILES!*
+*BACKUP YOUR IMPORTANT FILES!* *BACKUP YOUR IMPORTANT FILES!*
+
+- backup important files on the E10! The E10 will be erased!
+- Get a FAT or FAT32 formatted USB Flash Drive
+- Extract zip file (e10-next-datetime.zip) to the root direcotry
+  of the flash drive.
+- plug flash drive into E10
+- Connect to (USB) serial port of the E10
+- Login to you E10, type reboot
+- Press any key to interrupt U-Boot when it counts down
+- Copy/Paste the following commands into U-boot at the U-Boot> 
+  prompt:
+setenv loadaddr '0x21000000'
+setenv bootargs 'console=ttyS0,115200 root=/dev/mtdblock1 mtdparts=atmel_nand:16M(kernel)ro,120M(rootfs),4M(kernel2),16M(recovery),-(logs) rw rootfstype=jffs2'
+setenv bootcmd 'run bootsnap;run upgrade;run bootswrecovery'
+setenv bootsnap 'nboot 0x21000000 0 a0000'
+setenv bootswrecovery 'nboot 0x21000000 0 400000'
+setenv ubootargs 'setenv bootargs console=ttyS0,115200 root=/dev/mtdblock1 mtdparts=atmel_nand:16M(kernel),120M(rootfs),4M(kernel2),16M(recovery),-(logs) rw rootfstype=jffs2'
+setenv upgrade 'run ubootargs;usb start;fatload usb 0 0x21000000 uImage-e10i;bootm 0x21000000'
+setenv ubenv 'usb start;fatload usb 0 0x21000000 setenv.img;source 0x21000000'
+saveenv
+run upgrade
+
+- This will load the upgrade kernel from the USB Drive and 
+  boot it
+- login as root with no password
+- ./upgrade.sh
+- If everything goes fine, type reboot
+
+At this point, unplug the USB drive. Login to your freshly instaled
+E10 linux. Things to do:
+- Install snap connect
+- set root password (type passwd)
+- setup networking: 
+  Defaults to DHCP on eth0 (wired ethernet)
+  Edit /etc/network/interfaces if you want static ip
+  Edit /etc/wpa_supplicant.conf for your wireless AP/Key
+- As part of the upgrade, your /root directory was backed up to
+  /var/log/rootbkup.tar
+

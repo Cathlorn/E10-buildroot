@@ -19,5 +19,9 @@ package-build		Set of script to package up the builds into a zip
 documentation		Documentaion about upgrading the E10 and customizations
 			to the buildroot environment.
 patches			Various patches used by buildroot for different components
-
+====================================================================================
+Quick Directions:
+./pullBuild.sh
+This will update the git repo, then make the recovery image and main image, then 
+package it all up into a zip file. package-build/archive/e10-next-DATE.zip
 
