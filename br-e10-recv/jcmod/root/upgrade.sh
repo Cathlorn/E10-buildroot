@@ -1,6 +1,6 @@
 #!/bin/sh
 
-uversion="2011-10-16 14:52:57"
+uversion="2011-10-23 15:47:57"
 ukernel="uImage"	#Main Kernel
 urootfs="rootfs.jffs2"	#New jffs2 Root Filesystem
 uuboot="u-boot-e10.bin"	#New U-boot binary
@@ -28,18 +28,20 @@ then
   sleep 5
 else
   echo "U-Boot upgrade file missing $umpath/$uuboot"
+  exit 6
 fi
 }
 
 create_varlog_backup () {
-mkdir -p $uvpath
-mkdir /oldroot
 
 cat /proc/mtd | grep mtd4
 if [ $? -eq 1]
 then
   echo "MTD4 does not exist"
+  exit 5
 else
+  mkdir -p $uvpath
+  mkdir /oldroot
   mount -t jffs2 /dev/mtdblock1 /oldroot
   mount -t jffs2 /dev/mtdblock4 $uvpath
   if [ $? -eq 0 ]
