@@ -2,10 +2,10 @@
 
 ######################################################################
 ## Partially generated script ########################################
-## 2011-11-04 21:11:20 UTC ###########################################
+## 2011-11-04 23:21:50 UTC ###########################################
 ######################################################################
 
-uversion="2011-11-04 21:11:20"
+uversion="2011-11-04 23:21:50"
 ukernel="uImage"	#Main Kernel
 urootfs="rootfs.jffs2"	#New jffs2 Root Filesystem
 uuboot="u-boot-e10.bin"	#New U-boot binary
@@ -13,9 +13,12 @@ urkernel="uImage-e10i"	#Recovery/Upgrade/Install kernel
 umpath="/mnt"		#Path to mount upgrade files
 uvpath="/mntv"		#Path to mount var/log for temporary storage
 			#during upgrade and /var/log during runtime
+snap="Snap-2.4.6-py2.7.zip"	#This is the snap connect for the E10
+#It is downloaded from:
+#http://forums.synapse-wireless.com/attachment.php?attachmentid=336&d=1318867590
 
 sanity_checks () {
-[ -b /dev/sda1] || echo "Missing sda1" && exit 1
+[ -b /dev/sda1 ] || echo "Missing sda1" && exit 1
 [ -f "$umpath/$ukernel" ] || echo "Missing upgrade kernel" && exit 2
 [ -f "$umpath/$urootfs" ] || echo "Missing upgrade rootfs" && exit 3
 [ -f "$umpath/$urkernel" ] || echo "Missing Recovery Kernel" && exit 4
@@ -34,6 +37,30 @@ then
 else
   echo "U-Boot upgrade file missing $umpath/$uuboot"
   exit 6
+fi
+}
+
+install_sc () {
+if [ -f $umpath/$snap ]
+then
+  echo heartbeat > /sys/class/leds/redled/trigger
+  echo "Unpacking $snap onto new FileSystem"
+  mount -t jffs2 /dev/mtdblock1 /oldroot
+    if [ $? -eq 0 ]
+    then
+      echo "Mounted rootfs"
+      mkdir -p /oldroot/root/tmp
+      cd /oldroot/root/tmp
+      unzip $umpath/$snap
+      mv /oldroot/root/tmp /oldroot/root/Snap
+      umount /oldroot
+    else
+      echo "Unable to mount rootfs. Aborting SnapConnect install."
+      echo "You will need to install Snap Connect yourself"
+    fi
+  echo none > /sys/class/leds/redled/trigger
+else
+  echo "$snap not found on USB Drive!"
 fi
 }
 
@@ -61,6 +88,7 @@ else
   umount /oldroot
   umount $uvpath
 fi
+
 }
 
 
@@ -110,7 +138,9 @@ then
       sleep 2
       /usr/sbin/nandwrite -a /dev/mtd1 /mnt/rootfs.jffs2
       echo 0 > /sys/class/leds/redled/brightness
-      echo "Done Writing rootfs. If everything is ok, type reboot"
+      echo "Done Writing rootfs."
+      install_sc
+      echo "type reboot"
       echo heartbeat > /sys/class/leds/greenled/trigger
     else
       echo 
