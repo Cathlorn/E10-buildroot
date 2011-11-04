@@ -1,7 +1,7 @@
 From 8a94049d0fc04ba9ca174cd239746859ce349878 Mon Sep 17 00:00:00 2001
 From: "J.C. Woltz" <jwoltz@gmail.com>
 Date: Mon, 24 Oct 2011 23:39:57 -0400
-Subject: [PATCH 2/2] e10_defconfig
+Subject: [PATCH 2/3] e10_defconfig
 
 
 Signed-off-by: J.C. Woltz <jwoltz@gmail.com>
