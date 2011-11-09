@@ -25,3 +25,6 @@ Quick Directions:
 This will update the git repo, then make the recovery image and main image, then 
 package it all up into a zip file. package-build/archive/e10-next-DATE.zip
 
+Current build upgrade files:
+https://www.jcwoltz.com/e10/e10-next-20111105003547.zip
+
