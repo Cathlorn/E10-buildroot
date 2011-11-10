@@ -152,6 +152,7 @@ source "package/xvkbd/Config.in"
 endmenu
 
 menu "Hardware handling"
+source "package/gpio9260/Config.in"
 source "package/acpid/Config.in"
 source "package/cdrkit/Config.in"
 source "package/cramfs/Config.in"

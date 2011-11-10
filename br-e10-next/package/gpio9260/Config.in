@@ -1,0 +1,5 @@
+config BR2_PACKAGE_GPIO9260
+	bool "gpio9260"
+	help
+		gpio9260 is a program to interact with at91sam9260
+		and 9g20 GPIOs. 
