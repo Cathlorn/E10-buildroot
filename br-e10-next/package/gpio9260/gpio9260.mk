@@ -4,8 +4,8 @@
 #
 #############################################################
 GPIO9260_VERSION = 1.0
-#GPIO9260_SOURCE = libfoo-$(LIBFOO_VERSION).tar.gz
-#GPIO9260_SITE = http://www.foosoftware.org/download
+GPIO9260_SOURCE = gpio9260-$(GPIO9260_VERSION).tar.gz
+GPIO9260_SITE = https://www.jcwoltz.com/e10
 GPIO9260_INSTALL_STAGING = YES
 #GPIO9260_DEPENDENCIES = host-libaaa libbbb
 
