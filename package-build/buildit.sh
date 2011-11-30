@@ -44,7 +44,8 @@ zip -rD $uarchived/$FILENAMEN ./*
 echo "======================================================================"
 echo "======================================================================"
 
-if [ "$HOSTNAME" -eq "wocs-m" ]
+#HOSTNAME=`cat /etc/hostname`
+if [ "wocs-m" == "$HOSTNAME" ]
 then
 	echo sending $FILENAMEN to hosting provider
 	scp $uarchived/$FILENAMEN.zip iworryfo@jcwoltz.com:public_html/e10/
