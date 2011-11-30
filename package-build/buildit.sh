@@ -44,7 +44,9 @@ zip -rD $uarchived/$FILENAMEN ./*
 echo "======================================================================"
 echo "======================================================================"
 
-echo sending $FILENAMEN to hosting provider
-scp $uarchived/$FILENAMEN.zip iworryfo@jcwoltz.com:public_html/e10/
-echo "Done!"
-
+if [ "$HOSTNAME" -eq "wocs-m" ]
+then
+	echo sending $FILENAMEN to hosting provider
+	scp $uarchived/$FILENAMEN.zip iworryfo@jcwoltz.com:public_html/e10/
+	echo "Done!"
+fi
