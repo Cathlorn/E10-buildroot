@@ -9,11 +9,12 @@ http://buildroot.uclibc.org/
 
 Directories:
 buildroot-2011.05	unmodified buildroot
-br1105-main		modified buildroot for the E10
+buildroot-2011.11	unmodified buildroot
 br-e10-recv		modified buildroot for E10 to build upgrade images
 br-e10-next		modified buildroot. Unstable. Tracks latest buildroot
 			In active development towards linux 3.0.4 for more 
 			hardware support
+br1105-main		modified buildroot for the E10. now old
 package-build		Set of script to package up the builds into a zip
 			file used to upgrade the E10.
 documentation		Documentaion about upgrading the E10 and customizations
