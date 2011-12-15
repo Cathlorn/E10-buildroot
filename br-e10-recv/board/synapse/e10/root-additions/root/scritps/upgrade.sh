@@ -2,29 +2,49 @@
 
 ######################################################################
 ## Partially generated script ########################################
-## 2011-11-04 23:21:50 UTC ###########################################
+## 2011-12-15 20:04:55 UTC ###########################################
 ######################################################################
 
-uversion="2011-11-04 23:21:50"
-ukernel="uImage"	#Main Kernel
-urootfs="rootfs.jffs2"	#New jffs2 Root Filesystem
-uuboot="u-boot-e10.bin"	#New U-boot binary
-urkernel="uImage-e10i"	#Recovery/Upgrade/Install kernel
-umpath="/mnt"		#Path to mount upgrade files
-uvpath="/mntv"		#Path to mount var/log for temporary storage
-			#during upgrade and /var/log during runtime
-snap="Snap-2.4.6-py2.7.zip"	#This is the snap connect for the E10
+uversion="2011-12-15 20:04:55"
+ukernel="uImage"		#Main Kernel
+urootfs="rootfs.jffs2"		#New jffs2 Root Filesystem
+uuboot="u-boot-e10.bin"		#New U-boot binary
+urkernel="uImage-e10i"		#Recovery/Upgrade/Install kernel
+umpath="/mnt"			#Path to mount upgrade files
+uvpath="/mntv"			#Path to mount var/log for temporary storage
+				#during upgrade and /var/log during runtime
+
+snap="snap-3.0.3.tar.gz"	#This is the snap connect for the E10
+#snap="Snap-2.4.6-py2.7.zip"	#This is the snap connect for the E10
 #It is downloaded from:
 #http://forums.synapse-wireless.com/attachment.php?attachmentid=336&d=1318867590
+##############################################################################
+# Exit Codes:
+#  0
+#  1	Missing sda1
+#  2	Missing upgrade Kernel
+#  3	Missing upgrade rootfs
+#  4	Missing recovery kernel
+#  5	
+#  6	
+#  7	
+#  8	
+#  9	
+# 10	
+##############################################################################
 
 sanity_checks () {
+
 [ -b /dev/sda1 ] || echo "Missing sda1" && exit 1
 [ -f "$umpath/$ukernel" ] || echo "Missing upgrade kernel" && exit 2
 [ -f "$umpath/$urootfs" ] || echo "Missing upgrade rootfs" && exit 3
 [ -f "$umpath/$urkernel" ] || echo "Missing Recovery Kernel" && exit 4
+
 }
+##############################################################################
 
 upgrade_uboot () {
+
 if [ -f "$umpath/$uuboot" ]
 then
   echo "Erasing U-Boot. DO NOT POWER OFF!!!"
@@ -38,7 +58,9 @@ else
   echo "U-Boot upgrade file missing $umpath/$uuboot"
   exit 6
 fi
+
 }
+##############################################################################
 
 install_sc () {
 if [ -f $umpath/$snap ]
@@ -51,8 +73,9 @@ then
       echo "Mounted rootfs"
       mkdir -p /oldroot/root/tmp
       cd /oldroot/root/tmp
-      unzip $umpath/$snap
-      mv /oldroot/root/tmp /oldroot/root/Snap
+      tar -xzvf $umpath/$snap
+      mv /oldroot/root/tmp/Snap-3.0.3-py2.7 /oldroot/root/Snap
+      /bin/sync
       umount /oldroot
     else
       echo "Unable to mount rootfs. Aborting SnapConnect install."
@@ -63,6 +86,7 @@ else
   echo "$snap not found on USB Drive!"
 fi
 }
+##############################################################################
 
 create_varlog_backup () {
 
@@ -90,6 +114,7 @@ else
 fi
 
 }
+##############################################################################
 
 
 echo
