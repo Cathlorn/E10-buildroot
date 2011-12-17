@@ -13,3 +13,20 @@ iface wlan0 inet manual
   post-down kill `cat /var/run/udhcpc-wlan0.pid`
   post-down killall -q wpa_supplicant
 
+##############################################################################
+# Example statis IP
+# uncomment below lines for static IP. Comment out the eth0 lines above
+##############################################################################
+#auto eth0
+#iface eth0 inet static
+#  address 192.168.1.245
+#  netmask 255.255.255.0
+#  broadcast 192.168.1.255
+#  gateway 192.168.1.1
+#
+##############################################################################
+# Reminder: Edit /etc/resolv.conf to add your dns server. Example:
+# nameserver 192.168.1.1
+# nameserver 8.8.8.8
+# search yourdomain.com
+##############################################################################

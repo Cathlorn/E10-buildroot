@@ -6,7 +6,7 @@
 #                start dhcp client
 # 20110927170800 adding check to see if wlan exists.
 # 20110927171548 adding extra statement starting wpa_supplicant
-#
+# 20111217140955 adding time check for wpa_supplicant
 
 /sbin/ifconfig wlan0 | /bin/grep wlan0
 if [ $? -eq 0 ]
@@ -14,7 +14,7 @@ then
 
   COUNT=0
   echo "Starting wpa_supplicant..."
-  /usr/sbin/wpa_supplicant -Dwext -iwlan0 -c/etc/wpa_supplicant.conf -B
+  /usr/bin/time /usr/sbin/wpa_supplicant -Dwext -iwlan0 -c/etc/wpa_supplicant.conf -B
   echo "wpa_supplicant exit code: $?"
   until [ $COUNT -gt 30 ]; do
     sleep 1
@@ -40,6 +40,9 @@ then
   HOSTNAME=`cat /etc/hostname`
   echo /sbin/udhcpc -i wlan0 --hostname $HOSTNAME -p /var/run/udhcpc-wlan0.pid --background --syslog --arping
   /sbin/udhcpc -i wlan0 --hostname $HOSTNAME -p /var/run/udhcpc-wlan0.pid --background --syslog --arping
+  #If you want to assing a static IP to your wireless adapter, uncomment the previos line. Then replace with
+  #ifconfig commands to set static ip. Add a route command to set you default gateway. Edit /etc/recolv.conf
+  #to put in your nameservers (dns)
 
 else
   echo "wlan0 not found"
