@@ -3,17 +3,27 @@
 # Start SNAP Connect instance
 # Originally by Synapse Wireless
 # Modified 201110161425 by J.C. Woltz <jwoltz@gmail.com> to skip push button
-#
+# Modified 201112171401 by J.C. Woltz to check for snap connect dir and UserMain before starting snap connect
 
 start() {
-	echo -n "Starting user SNAP Connect instance..."
-	start-stop-daemon --start --quiet --make-pidfile --pidfile /var/run/snapconnect.pid --background --exec /usr/bin/python /root/UserMain.py
-	echo "OK"
+	if [ -d /root/Snap ]; then
+	  if [ -f /root/UserMain.py ]; then
+	    echo -n "Starting user SNAP Connect instance..."
+	    start-stop-daemon --start --quiet --make-pidfile --pidfile /var/run/snapconnect.pid --background --exec /usr/bin/python /root/UserMain.py
+	    echo "OK"
+	    echo 1 > /sys/class/leds/greenled/brightness
+	  else
+	    echo "Missing /root/UserMain.py ! Not starting Snap Connect"
+	  fi #Check for /root/UserMain.py
+	else
+	  echo "Missing /root/Snap ! Not starting Snap Connect"
+	fi #Check for /root/Snap
 }
 stop() {
 	echo -n "Stopping SNAP Connect..."
 	start-stop-daemon --stop --quiet --pidfile /var/run/snapconnect.pid
 	echo "OK"
+	echo 0 > /sys/class/leds/greenled/brightness
 }
 restart() {
 	stop
