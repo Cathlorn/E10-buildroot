@@ -2,10 +2,10 @@
 
 ######################################################################
 ## Partially generated script ########################################
-## 2011-12-15 20:04:55 UTC ###########################################
+## 2011-12-28 20:32:28 UTC ###########################################
 ######################################################################
 
-uversion="2011-12-15 20:04:55"
+uversion="2011-12-28 20:32:28"
 ukernel="uImage"		#Main Kernel
 urootfs="rootfs.jffs2"		#New jffs2 Root Filesystem
 uuboot="u-boot-e10.bin"		#New U-boot binary
@@ -135,28 +135,29 @@ then
     if [ -f "$umpath/$ukernel" ]
     then
       create_varlog_backup
-      #/usr/sbin/flash_erase
+
       #Erase Flash for Kernel upgrade
       echo "About to erase Flash for kernel Storage"
       sleep 2
       echo 1 > /sys/class/leds/redled/brightness
-      #for i in `seq 0 27`
-      #do
-        #/usr/sbin/flash_erase /dev/mtd0 0xa0000 $i
-        /usr/sbin/flash_erase /dev/mtd0 0xa0000 0
-      #done
+      # Main Kernel is stored at 0xA000
+      # Secondary Kernel is Stored at 0x400000
+      # For Safety Reasons, we now wip one kernel section at a time
+      # The count of 20 needs to be calculated
+      /usr/sbin/flash_erase -q /dev/mtd0 0xa0000 20
       echo "Done erasing kernel flash"
       sleep 3
       echo "Writing Kernel to flash"
       sleep 2
       #Write new Kernel Image
       /usr/sbin/nandwrite -p -s 0xa0000 /dev/mtd0 /mnt/uImage
-      echo 
+      echo
       echo "Writing Backup Kernel to flash"
+      /usr/sbin/flash_erase -q /dev/mtd0 0x400000 0
       sleep 3
       /usr/sbin/nandwrite -p -s 0x400000 /dev/mtd0 /mnt/uImage-e10i
       echo "Formatting /dev/mtd1 for rootfs"
-      /usr/sbin/flash_eraseall -q -j /dev/mtd1
+      /usr/sbin/flash_erase -q -j /dev/mtd1 0 0
       #echo "Formatting /dev/mtd4 for logfs"
       #/usr/sbin/flash_eraseall -q -j /dev/mtd4
       echo "About to write $umpath/$urootfs to mtd1"

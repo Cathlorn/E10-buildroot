@@ -12,7 +12,7 @@ echo "######################################################################" >>
 echo >> $F
 
 echo uversion=\"$DT\" >> $F
-cat upgrade.txt >> $F
+cat pre-upgrade.sh >> $F
 chmod 755 $F
 ls -l $F
 
