@@ -2,8 +2,8 @@
 #
 # System-V init script for the lighttpd web server
 # Modified by J.C. Woltz <jwoltz@gmail.com>
-# 20111007094213 set the hwclock if ntpdate successful
-# 
+# 201201011219 Added check for log dir. Since /var/log can be on its own at times
+#
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DESC="lighttpd web server"
@@ -12,6 +12,8 @@ DAEMON=/usr/sbin/$NAME
 
 # Gracefully exit if the package has been removed.
 test -x $DAEMON || exit 0
+# Make the log dirrectory in case it is missing
+test -d /var/log/lighttpd || mkdir /var/log/lighttpd
 
 # Read config file if it is present.
 if [ -r /etc/default/$NAME ]
