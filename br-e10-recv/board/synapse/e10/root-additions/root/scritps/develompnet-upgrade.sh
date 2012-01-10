@@ -1,15 +1,19 @@
 #!/bin/sh
 
 ukernel="uImage"
-urootfs="rootfs.jffs2"
+urootfs="rootfs.ubi"
 uuboot="u-boot-e10.bin"
 urkernel="uImage-e10i"
 umpath="/mnt"
 uvpath="/mntv"
 
 sanity_checks () {
-[ -b /dev/sda1 ] || echo "Missing sda1" && exit
-[ -f "$umpath/$ukernel" ] || echo "Missing upgrade kernel" && exit
+
+[ -b /dev/sda1 ] || echo "Missing sda1" && exit 1
+[ -f "$umpath/$ukernel" ] || echo "Missing upgrade kernel" && exit 2
+[ -f "$umpath/$urootfs" ] || echo "Missing upgrade rootfs" && exit 3
+[ -f "$umpath/$urkernel" ] || echo "Missing Recovery Kernel" && exit 4
+
 }
 
 upgrade_uboot () {
@@ -50,9 +54,15 @@ else
 fi
 }
 
+do_upgrade() {
+  /usr/sbin/ubiformat /dev/mtd1 -y
+  /usr/sbin/ubiattach -m 1
+  /usr/sbin/ubimkvol /dev/ubi0 -s 100MiB -N rootfs
+
+}
 
 echo
-echo "E10 Image upgrader 201109231013"
+echo "E10 Image upgrader 20120108"
 echo
 sleep 2
 echo "Loading usb-storage"
@@ -61,15 +71,15 @@ sleep 5
 # Make sure all of the files needed exist
 sanity_checks
 # Check u-boot, if old upgrade
-check_uboot
+#check_uboot
 # Format mtd4 for /var/log persistant storage
-create_varlog
+#create_varlog
 # Backup the /root directory of the e10
-backup_root
+#backup_root
 # Wipe/format/install new kernel and image
 do_upgrade
 # restore /root from backup
-restore_root
+#restore_root
 # Do some extra checks to make sure system will boot
 
 echo
@@ -79,4 +89,7 @@ echo
 #/usr/sbin/ubiformat /dev/mtd1 -y
 #/usr/sbin/ubiattach -m 1
 #/usr/sbin/ubimkvol /dev/ubi0 -s 100MiB -N rootfs
+
+#/usr/sbin/ubiformat /dev/mtd1 -f /mnt/rootfs.ubi
+#/usr/sbin/ubiattach -m 1
 
