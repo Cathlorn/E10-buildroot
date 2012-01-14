@@ -10,6 +10,7 @@ uvpath="/mntv"
 sanity_checks () {
 
 [ -b /dev/sda1 ] || echo "Missing sda1" && exit 1
+mount /dev/sda1 $umpath
 [ -f "$umpath/$ukernel" ] || echo "Missing upgrade kernel" && exit 2
 [ -f "$umpath/$urootfs" ] || echo "Missing upgrade rootfs" && exit 3
 [ -f "$umpath/$urkernel" ] || echo "Missing Recovery Kernel" && exit 4
@@ -55,14 +56,13 @@ fi
 }
 
 do_upgrade() {
-  /usr/sbin/ubiformat /dev/mtd1 -y
+  /usr/sbin/ubiformat /dev/mtd1 -f /mnt/rootfs.ubi
   /usr/sbin/ubiattach -m 1
-  /usr/sbin/ubimkvol /dev/ubi0 -s 100MiB -N rootfs
 
 }
 
 echo
-echo "E10 Image upgrader 20120108"
+echo "E10 dev Image upgrader 20120110"
 echo
 sleep 2
 echo "Loading usb-storage"

@@ -12,7 +12,7 @@ echo "######################################################################" >>
 echo >> $F
 
 echo uversion=\"$DT\" >> $F
-cat pre-upgrade.sh >> $F
+cat ubi-upgrade.sh >> $F
 chmod 755 $F
 ls -l $F
 
