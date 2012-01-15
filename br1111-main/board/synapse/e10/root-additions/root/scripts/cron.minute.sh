@@ -1,3 +1,3 @@
 #!/bin/sh
 
-/root/check-wlan.sh
+#/root/check-wlan.sh

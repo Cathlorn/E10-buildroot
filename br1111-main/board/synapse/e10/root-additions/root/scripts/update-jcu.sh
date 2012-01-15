@@ -1,4 +1,12 @@
 #!/bin/sh
+#
+# Quick script I (J.C. Woltz) use on a freshly updated e10 to 
+# pull snap connect, extract, download my starter (testing) UserMain.py
+# create the sqlite db and reboot. 
+#
+# You can use this if you would like, although you should use your
+# own usermain. 
+#
 
 cd /root
 wget http://forums.synapse-wireless.com/upload/Snap-3.0.3-py2.7.tgz
