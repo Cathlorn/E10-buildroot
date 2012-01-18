@@ -4,7 +4,7 @@ upgrade_kernel () {
       echo "About to erase Flash for kernel Storage"
       sleep 2
       echo 1 > /sys/class/leds/redled/brightness
-      # Main Kernel is stored at 0xA000
+      # Main Kernel is stored at 0xA0000
       # Secondary Kernel is Stored at 0x400000
       # For Safety Reasons, we now wip one kernel section at a time
       # The count of 20 needs to be calculated
