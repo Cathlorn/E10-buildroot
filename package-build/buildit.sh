@@ -3,13 +3,17 @@
 #tld="/usr/local/src/git/E10-buildroot"
 tld="$( cd "$( dirname "$0" )"/.. && pwd )"
 ukernel="$tld/br1111-main/output/images/uImage"
-urootfs="$tld/br1111-main/output/images/rootfs.*"
+urootfs="$tld/br1111-main/output/images/rootfs.jffs2"
 nkernel="$tld/br-e10-next/output/images/uImage"
-nrootfs="$tld/br-e10-next/output/images/rootfs.*"
+nrootfs="$tld/br-e10-next/output/images/rootfs.jffs2"
+
 uinitk="$tld/br-e10-recv/output/images/uImage"
+
 uscript="$tld/br-e10-recv/board/synapse/e10/root-additions/root/upgrade.sh"
+
 ufilesd="$tld/package-build/files"
 uarchived="$tld/package-build/archive"
+
 
 mkdir -p $ufilesd
 mkdir -p $uarchived
@@ -49,5 +53,8 @@ if [ "wocs-m" == "$HOSTNAME" ]
 then
 	echo sending $FILENAMEN to hosting provider
 	scp $uarchived/$FILENAMEN.zip iworryfo@jcwoltz.com:public_html/e10/
+	echo "Done!"
+	echo sending $FILENAMES to hosting provider
+	scp $uarchived/$FILENAMES.zip iworryfo@jcwoltz.com:public_html/e10/
 	echo "Done!"
 fi
