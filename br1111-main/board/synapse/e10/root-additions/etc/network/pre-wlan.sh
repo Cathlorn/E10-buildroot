@@ -7,8 +7,9 @@
 # 20110927170800 adding check to see if wlan exists.
 # 20110927171548 adding extra statement starting wpa_supplicant
 # 20111217140955 adding time check for wpa_supplicant
+# 20120203092227 add devnull to initial check
 
-/sbin/ifconfig wlan0 | /bin/grep wlan0
+/sbin/ifconfig wlan0 | /bin/grep wlan0 > /dev/null
 if [ $? -eq 0 ]
 then
 
