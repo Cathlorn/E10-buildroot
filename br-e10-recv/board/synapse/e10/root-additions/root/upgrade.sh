@@ -8,7 +8,7 @@
 uversion="2011-12-28 20:32:28"
 ukernel="uImage"		#Main Kernel
 urootfs="rootfs.jffs2"		#New jffs2 Root Filesystem
-uuboot="u-boot-e10.bin"		#New U-boot binary
+uuboot="u-boot.bin"		#New U-boot binary
 urkernel="uImage-e10i"		#Recovery/Upgrade/Install kernel
 umpath="/mnt"			#Path to mount upgrade files
 uvpath="/mntv"			#Path to mount var/log for temporary storage
@@ -48,7 +48,7 @@ upgrade_uboot () {
 if [ -f "$umpath/$uuboot" ]
 then
   echo "Erasing U-Boot. DO NOT POWER OFF!!!"
-  /usr/sbin/flash_erase /dev/mtd0 0x20000 1
+  #/usr/sbin/flash_erase /dev/mtd0 0x20000 1
   /usr/sbin/flash_erase /dev/mtd0 0x20000 2
   echo "Flashing U-Boot..."
   /usr/sbin/nandwrite -p -s 0x20000 /dev/mtd0 $umpath/$uuboot
@@ -144,7 +144,7 @@ then
       # Secondary Kernel is Stored at 0x400000
       # For Safety Reasons, we now wip one kernel section at a time
       # The count of 20 needs to be calculated
-      /usr/sbin/flash_erase -q /dev/mtd0 0xa0000 20
+      /usr/sbin/flash_erase -q /dev/mtd0 0xa0000 27
       echo "Done erasing kernel flash"
       sleep 3
       echo "Writing Kernel to flash"
@@ -163,11 +163,19 @@ then
       echo "About to write $umpath/$urootfs to mtd1"
       sleep 2
       /usr/sbin/nandwrite -a /dev/mtd1 /mnt/rootfs.jffs2
-      echo 0 > /sys/class/leds/redled/brightness
-      echo "Done Writing rootfs."
-      install_sc
-      echo "type reboot"
-      echo heartbeat > /sys/class/leds/greenled/trigger
+      if [ $? -eq 0 ]
+      then
+        echo 0 > /sys/class/leds/redled/brightness
+        echo "Done Writing rootfs."
+        install_sc
+        echo "type reboot"
+        echo heartbeat > /sys/class/leds/greenled/trigger
+      else
+        echo heartbeat > /sys/class/leds/redled/trigger
+        echo "Error writing rootfs!!!"
+        echo "Possible cause, bad usb stick, try with another US stick"
+        echo "Especially if you see errors about sda1"
+      fi
     else
       echo 
       echo "Can not find $umpath/$ukernel"

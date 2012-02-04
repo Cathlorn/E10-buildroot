@@ -6,7 +6,7 @@ ukernel="$tld/br1111-main/output/images/uImage"
 urootfs="$tld/br1111-main/output/images/rootfs.jffs2"
 nkernel="$tld/br-e10-next/output/images/uImage"
 nrootfs="$tld/br-e10-next/output/images/rootfs.jffs2"
-
+uboot="$tld/br1111-main/output/images/u-boot.bin"
 uinitk="$tld/br-e10-recv/output/images/uImage"
 
 uscript="$tld/br-e10-recv/board/synapse/e10/root-additions/root/upgrade.sh"
@@ -26,6 +26,7 @@ cp $uinitk $ufilesd/uImage-e10i
 cp $ukernel $ufilesd/
 cp $urootfs $ufilesd/
 cp $uscript $ufilesd/
+cp $uboot $ufilesd/
 
 echo "Compiling u-boot environment script"
 mkimage -T script -C none -n 'E10 environment update' -A arm -d set-uboot-env $ufilesd/setenv.img
@@ -52,9 +53,9 @@ echo "======================================================================"
 if [ "wocs-m" == "$HOSTNAME" ]
 then
 	echo sending $FILENAMEN to hosting provider
-	scp $uarchived/$FILENAMEN.zip iworryfo@jcwoltz.com:public_html/e10/
+	scp $uarchived/$FILENAMEN.zip $uarchived/$FILENAMES.zip iworryfo@jcwoltz.com:public_html/e10/
 	echo "Done!"
-	echo sending $FILENAMES to hosting provider
-	scp $uarchived/$FILENAMES.zip iworryfo@jcwoltz.com:public_html/e10/
-	echo "Done!"
+#	echo sending $FILENAMES to hosting provider
+#	scp $uarchived/$FILENAMES.zip iworryfo@jcwoltz.com:public_html/e10/
+#	echo "Done!"
 fi

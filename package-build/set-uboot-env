@@ -2,12 +2,16 @@ setenv loadaddr '0x21000000'
 echo ========== Boot Argument Settings ==========
 setenv bootargs 'console=ttyS0,115200 root=/dev/mtdblock1 mtdparts=atmel_nand:16M(kernel)ro,120M(rootfs),4M(kernel2),16M(recovery),-(logs) rw rootfstype=jffs2'
 setenv bootcmd 'run bootsnap;run upgrade;run bootswrecovery'
-setenv bootsnap 'nboot 0x21000000 0 a0000'
-setenv bootswrecovery 'nboot 0x21000000 0 400000'
+setenv bootsnap 'nboot ${loadaddr} 0 a0000'
+setenv bootswrecovery 'nboot ${loadaddr} 0 400000'
 echo ====== Upgrade Boot Argument Settings ======
+setenv image_install uImage-e10i
+setenv image_run uImage-e10p
 setenv ubootargs 'setenv bootargs console=ttyS0,115200 root=/dev/mtdblock1 mtdparts=atmel_nand:16M(kernel),120M(rootfs),4M(kernel2),16M(recovery),-(logs) rw rootfstype=jffs2'
-setenv upgrade 'run ubootargs;usb start;fatload usb 0 0x21000000 uImage-e10i;bootm 0x21000000'
+setenv upgrade 'run ubootargs;usb start;fatload usb 0 ${loadaddr} ${image_install};bootm ${loadaddr}'
 setenv ubenv 'usb start;fatload usb 0 0x21000000 setenv.img;source 0x21000000'
+echo ======== UBI Boot Argument Settings ========
+setenv ubi_args 'setenv bootargs console=ttyS0,115200 root=ubi0:rootfs ubi.mtd=1 rootfstype=ubifs mtdparts=atmel_nand:16M(kernel),120M(rootfs),4M(kernel2),16M(recovery),-(logs) rw'
 echo =========== Save new definitions ===========
 saveenv
 echo =========== Starting upgrade env ===========
