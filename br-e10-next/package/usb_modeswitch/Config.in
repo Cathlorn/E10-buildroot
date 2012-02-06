@@ -7,3 +7,4 @@ config BR2_PACKAGE_USB_MODESWITCH
 	  Used to switch mode on multiple-function devices
 
 	  http://www.draisberghof.de/usb_modeswitch/
+
