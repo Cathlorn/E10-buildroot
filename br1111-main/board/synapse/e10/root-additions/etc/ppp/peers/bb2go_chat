@@ -1,0 +1,28 @@
+# Connection script for the Virgin Mobile Ovation MC760 modem
+# Note: This demo script is setup to work on the Cingular EDGE network
+#
+SAY 'Starting Broadband 2 Go connect script...\n'
+SAY '\n'
+
+#######################################
+SAY 'Setting the abort string\n'
+SAY '\n'
+# Abort String ------------------------------
+ABORT 'NO DIAL TONE' ABORT 'NO ANSWER' ABORT 'NO CARRIER' ABORT DELAYED
+
+#######################################
+SAY 'Initializing modem\n'
+# Modem Initialization 
+'' AT
+OK ATZ
+
+#######################################
+OK     'ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0'
+
+#######################################
+SAY '\n'
+SAY     'Dialing...\n'
+# Dial the ISP, this is the common dial string
+
+OK ATD*99#
+CONNECT ''
