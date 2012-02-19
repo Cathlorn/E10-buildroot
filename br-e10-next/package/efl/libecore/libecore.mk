@@ -17,16 +17,36 @@ HOST_LIBECORE_CONF_OPT += --enable-ecore-evas
 # default options
 LIBECORE_CONF_OPT = --disable-simple-x11
 
+ifeq ($(BR2_PACKAGE_TSLIB),y)
+LIBECORE_DEPENDENCIES += tslib
+endif
+
+ifeq ($(BR2_PACKAGE_LIBGLIB2),y)
+LIBECORE_DEPENDENCIES += libglib2
+endif
+
+ifeq ($(BR2_PACKAGE_OPENSSL),y)
+LIBECORE_DEPENDENCIES += openssl
+endif
+
+ifeq ($(BR2_PACKAGE_GNUTLS),y)
+LIBECORE_DEPENDENCIES += gnutls
+endif
+
+ifeq ($(BR2_PACKAGE_LIBCURL),y)
+LIBECORE_DEPENDENCIES += libcurl
+endif
+
 # libecore
 ifeq ($(BR2_PACKAGE_LIBECORE_DIRECTFB),y)
 LIBECORE_CONF_OPT += --enable-ecore-directfb
+LIBECORE_DEPENDENCIES += directfb
 else
 LIBECORE_CONF_OPT += --disable-ecore-directfb
 endif
 
 ifeq ($(BR2_PACKAGE_LIBECORE_FB),y)
 LIBECORE_CONF_OPT += --enable-ecore-fb
-LIBECORE_DEPENDENCIES += directfb
 else
 LIBECORE_CONF_OPT += --disable-ecore-fb
 endif
@@ -42,7 +62,7 @@ ifeq ($(BR2_PACKAGE_LIBECORE_X),y)
 LIBECORE_CONF_OPT += --enable-ecore-x
 LIBECORE_DEPENDENCIES += xlib_libXext xlib_libX11
 else
-LIBECORE_CONF_OPT += --disable-ecore-x
+LIBECORE_CONF_OPT += --disable-ecore-x --disable-ecore-imf-xim
 endif
 
 ifeq ($(BR2_PACKAGE_LIBECORE_X_XCB),y)
@@ -56,11 +76,10 @@ LIBECORE_DEPENDENCIES += libxcb xlib_libX11 xcb-util
 # teach it about CC_FOR_BUILD, but for now simply build makekeys by
 # hand in advance
 define LIBECORE_BUILD_MAKEKEYS_FOR_HOST
-	cd $(@D)/src/util && $(HOSTCC) $(HOST_CFLAGS) $(HOST_LDFLAGS) \
-		-o makekeys makekeys.c
+	$(HOST_CONFIGURE_OPTS) $(MAKE1) -C $(@D)/src/util makekeys.o makekeys
 endef
 
-LIBECORE_POST_CONFIGURE_HOOKS += LIBECORE_BUILD_MAKEKEYS_FOR_HOST
+LIBECORE_POST_EXTRACT_HOOKS += LIBECORE_BUILD_MAKEKEYS_FOR_HOST
 else
 LIBECORE_CONF_OPT += --disable-ecore-x-xcb
 endif
