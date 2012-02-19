@@ -1,7 +1,11 @@
 config BR2_PACKAGE_USB_MODESWITCH_DATA
-	bool "usb_modeswitch_data"
 	select BR2_PACKAGE_USB_MODESWITCH
+	select BR2_PACKAGE_TCL
+	select BR2_PACKAGE_TCL_TCLSH
+	bool "usb_modeswitch_data"
 	help
-	  USB mode switcher data
-	  Contains udev rules and other data 
-
+	  USB mode switch data
+	  Contains udev rules and events to allow usb_modeswitch to
+	  function automatically
+	  
+	  http://www.draisberghof.de/usb_modeswitch/
