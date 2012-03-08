@@ -1,0 +1,8 @@
+config BR2_PACKAGE_USB_MODESWITCH_DATA
+	depends on BR2_PACKAGE_USB_MODESWITCH
+	bool "usb_modeswitch_data"
+	help
+	  USB mode switch data
+	  Contains udev rules and other device data
+	  
+	  http://www.draisberghof.de/usb_modeswitch/
