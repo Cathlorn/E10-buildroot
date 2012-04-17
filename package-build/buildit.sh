@@ -2,11 +2,11 @@
 
 #tld="/usr/local/src/git/E10-buildroot"
 tld="$( cd "$( dirname "$0" )"/.. && pwd )"
-ukernel="$tld/br1111-main/output/images/uImage"
-urootfs="$tld/br1111-main/output/images/rootfs.jffs2"
+ukernel="$tld/br1202-main/output/images/uImage"
+urootfs="$tld/br1202-main/output/images/rootfs.jffs2"
 nkernel="$tld/br-e10-next/output/images/uImage"
 nrootfs="$tld/br-e10-next/output/images/rootfs.jffs2"
-uboot="$tld/br1111-main/output/images/u-boot.bin"
+uboot="$tld/br1202-main/output/images/u-boot.bin"
 uinitk="$tld/br-e10-recv/output/images/uImage"
 
 uscript="$tld/br-e10-recv/board/synapse/e10/root-additions/root/upgrade.sh"
@@ -30,9 +30,10 @@ cp $uboot $ufilesd/
 
 echo "Compiling u-boot environment script"
 mkimage -T script -C none -n 'E10 environment update' -A arm -d set-uboot-env $ufilesd/setenv.img
+echo
 
 DT=`date -u +%Y%m%d%H%M%S`
-FILENAMES=e10-1111-$DT
+FILENAMES=e10-1202-$DT
 FILENAMEN=e10-next-$DT
 echo "Creating $FILENAMES.zip ..."
 cd $ufilesd
