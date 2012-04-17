@@ -120,6 +120,16 @@ endif
 GCC_HOST_PREREQ += host-mpc
 endif
 
+# GCC 4.7.x prerequisites
+ifeq ($(findstring x4.7.,x$(GCC_VERSION)),x4.7.)
+GCC_WITH_HOST_MPC = --with-mpc=$(HOST_DIR)/usr
+GCC_TARGET_PREREQ += mpc
+ifeq ($(BR2_TOOLCHAIN_BUILDROOT),y)
+HOST_SOURCE += host-mpc-source
+endif
+GCC_HOST_PREREQ += host-mpc
+endif
+
 # GCC snapshot prerequisites
 # Since we don't know and it can be quite new just ask for everything known
 ifneq ($(GCC_SNAP_DATE),)
@@ -172,7 +182,7 @@ endif
 
 $(DL_DIR)/$(GCC_SOURCE):
 	mkdir -p $(DL_DIR)
-	$(call DOWNLOAD,$(GCC_SITE),$(GCC_SOURCE))
+	$(call DOWNLOAD,$(GCC_SITE)/$(GCC_SOURCE))
 
 gcc-unpacked: $(GCC_DIR)/.patched
 $(GCC_DIR)/.unpacked: $(DL_DIR)/$(GCC_SOURCE)

@@ -4,9 +4,8 @@
 #
 #############################################################
 
-MPD_VERSION = 0.16.6
-MPD_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/musicpd
-MPD_AUTORECONF = YES
+MPD_VERSION = 0.16.8
+MPD_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/project/musicpd/mpd/$(MPD_VERSION)
 MPD_DEPENDENCIES = host-pkg-config libglib2
 
 # Some options need an explicit --disable or --enable
