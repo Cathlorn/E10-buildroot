@@ -157,7 +157,7 @@ then
       /usr/sbin/nandwrite -a /dev/mtd1 /mnt/rootfs.jffs2
       echo 0 > /sys/class/leds/redled/brightness
       echo "Done Writing rootfs."
-      install_sc
+      #install_sc
       echo "type reboot"
       echo heartbeat > /sys/class/leds/greenled/trigger
     else
