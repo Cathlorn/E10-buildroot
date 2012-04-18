@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYTHON_PYUSB
+	bool "python-pyusb"
+	depends on BR2_PACKAGE_PYTHON
+	help
+	  PyUSB provides USB access on the Python language.
+
+	  http://sourceforge.net/projects/pyusb/
+
