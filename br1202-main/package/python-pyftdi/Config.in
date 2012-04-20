@@ -1,0 +1,9 @@
+config BR2_PACKAGE_PYTHON_PYFTDI
+	bool "python-pyftdi"
+	depends on BR2_PACKAGE_PYTHON
+	help
+	  PyFtdi aims at providing a user-space driver for modern FTDI_ devices,
+	  implemented in pure Python language.
+
+	  http://pypi.python.org/pypi/pyftdi
+
