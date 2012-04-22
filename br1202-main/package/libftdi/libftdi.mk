@@ -11,7 +11,7 @@ LIBFTDI_INSTALL_STAGING = YES
 
 LIBFTDI_AUTORECONF = YES
 
-LIBFDTI_CONF_OPT = --without-examples
+# LIBFDTI_CONF_OPT = --without-examples
 
 # configure detect it automaticaly so we need to force it
 ifeq ($(BR2_PACKAGE_LIBTFDI_CPP),y)

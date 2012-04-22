@@ -6,8 +6,6 @@ umpath="/mnt"			#Path to mount upgrade files
 uvpath="/mntv"			#Path to mount var/log for temporary storage
 				#during upgrade and /var/log during runtime
 
-snap="snap-3.0.3.tar.gz"	#This is the snap connect for the E10
-#snap="Snap-2.4.6-py2.7.zip"	#This is the snap connect for the E10
 #It is downloaded from:
 #http://forums.synapse-wireless.com/attachment.php?attachmentid=336&d=1318867590
 ##############################################################################
@@ -54,30 +52,6 @@ fi
 }
 ##############################################################################
 
-install_sc () {
-if [ -f $umpath/$snap ]
-then
-  echo heartbeat > /sys/class/leds/redled/trigger
-  echo "Unpacking $snap onto new FileSystem"
-  mount -t jffs2 /dev/mtdblock1 /oldroot
-    if [ $? -eq 0 ]
-    then
-      echo "Mounted rootfs"
-      mkdir -p /oldroot/root/tmp
-      cd /oldroot/root/tmp
-      tar -xzvf $umpath/$snap
-      mv /oldroot/root/tmp/Snap-3.0.3-py2.7 /oldroot/root/Snap
-      /bin/sync
-      umount /oldroot
-    else
-      echo "Unable to mount rootfs. Aborting SnapConnect install."
-      echo "You will need to install Snap Connect yourself"
-    fi
-  echo none > /sys/class/leds/redled/trigger
-else
-  echo "$snap not found on USB Drive!"
-fi
-}
 ##############################################################################
 
 create_varlog_backup () {
@@ -114,9 +88,9 @@ echo "E10 Image upgrader $uversion"
 echo
 echo 0 > /sys/class/leds/greenled/brightness
 echo 0 > /sys/class/leds/redled/brightness
-sleep 2
-echo "Loading usb-storage"
-modprobe usb-storage
+#sleep 2
+#echo "Loading usb-storage"
+#modprobe usb-storage
 sleep 5
 if [ -b /dev/sda ]
 then
@@ -136,7 +110,7 @@ then
       # Secondary Kernel is Stored at 0x400000
       # For Safety Reasons, we now wip one kernel section at a time
       # The count of 20 needs to be calculated
-      /usr/sbin/flash_erase -q /dev/mtd0 0xa0000 20
+      /usr/sbin/flash_erase -q /dev/mtd0 0xa0000 37
       echo "Done erasing kernel flash"
       sleep 3
       echo "Writing Kernel to flash"
