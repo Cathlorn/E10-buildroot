@@ -10,11 +10,13 @@ http://buildroot.uclibc.org/
 Directories:
 buildroot-2011.05	unmodified buildroot
 buildroot-2011.11	unmodified buildroot
+br1202-main		Main Stable build for E10
 br-e10-recv		modified buildroot for E10 to build upgrade images
 br-e10-next		modified buildroot. Unstable. Tracks latest buildroot
 			In active development towards linux 3.0.4 for more 
 			hardware support
 br1105-main		modified buildroot for the E10. now old
+br1111-main		modified buildroot for the E10. now old
 package-build		Set of script to package up the builds into a zip
 			file used to upgrade the E10.
 documentation		Documentaion about upgrading the E10 and customizations
@@ -27,5 +29,5 @@ This will update the git repo, then make the recovery image and main image, then
 package it all up into a zip file. package-build/archive/e10-next-DATE.zip
 
 Current build upgrade files:
-https://www.jcwoltz.com/e10/e10-next-20111105003547.zip
+http://www.jcwoltz.com/e10/e10-1202-20120423115426.zip
 
