@@ -11,3 +11,4 @@
 *.orig
 *.rej
 *~
+debug.log

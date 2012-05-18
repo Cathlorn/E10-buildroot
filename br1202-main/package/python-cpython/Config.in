@@ -1,0 +1,10 @@
+config BR2_PACKAGE_PYTHON_CPYTHON
+	bool "python-cpython"
+	depends on BR2_PACKAGE_PYTHON
+	help
+	  Cpython The Cython language makes writing C 
+	  extensions for the Python language as easy as 
+	  Python itself.
+
+	  http://cython.org/
+
